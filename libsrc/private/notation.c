@@ -1,12 +1,19 @@
 #include "notation.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, va_list aliases)
 {
     if (notation == NULL || main_name == NULL)
         return false;
+
+    if (!is_flag(main_name))
+    {
+        fprintf(stderr, "`%s` is not a valid flag name, flags should begin with `-`\n", main_name);
+        return false;
+    }
 
     notation->main_name = strdup(main_name);
     if (notation->main_name == NULL)
@@ -29,7 +36,17 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
 
     notation->alias_count = alias_n;
     for (size_t i = 0; i < alias_n; ++i)
-        notation->aliases[i] = strdup(va_arg(aliases, char*));
+    {
+        const char* val = va_arg(aliases, char*);
+        if (is_flag(val))
+        {
+            notation->aliases[i] = strdup(val);
+            continue;
+        }
+
+        fprintf(stderr, "`%s` is not a valid flag name, flags should begin with `-`\n", val);
+        notation->aliases[i] = NULL;
+    }
 
     return true;
 }
@@ -50,10 +67,21 @@ void notation_clean(notation_s* notation)
 
     for (size_t i = 0; i < notation->alias_count; ++i)
     {
+        if (notation->aliases[i] == NULL)
+            continue;
+
         free(notation->aliases[i]);
         notation->aliases[i] = NULL;
     }
     free(notation->aliases);
 
     notation->alias_count = 0;
+}
+
+bool is_flag(const char* value)
+{
+    if (strlen(value) <= 0)
+        return false;
+
+    return value[0] == '-';
 }

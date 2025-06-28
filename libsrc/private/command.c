@@ -16,7 +16,7 @@ bool command_init(command_s* command, size_t option_capacity)
     if (command->options == NULL)
         return false;
 
-    command->is_on = false;
+    command->is_set = false;
     command->option_capacity = option_capacity;
     command->option_count = 0;
     return true;

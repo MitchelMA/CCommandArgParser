@@ -39,6 +39,7 @@ typedef struct option_
         float float_value;
         char* string_value;
     } default_value;
+    void* set_value;
 } option_s;
 
 typedef struct command_
@@ -46,7 +47,7 @@ typedef struct command_
     notation_s notation;
     arguments_s parsed_arguments;
 
-    bool is_on;
+    bool is_set;
     size_t option_capacity;
     size_t option_count;
     option_s* options;

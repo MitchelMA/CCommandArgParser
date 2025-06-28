@@ -22,6 +22,8 @@ bool option_init(option_s* option, bool is_required, option_type_e option_type, 
     if (option == NULL || option_type >= MAX_OPTION_TYPE_COUNT)
         return false;
 
+    option->set_value = NULL;
+
     bool init_failure = false;
     switch(option_type)
     {
