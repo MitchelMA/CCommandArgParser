@@ -4,6 +4,7 @@
 #include "notation.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -65,4 +66,59 @@ bool command_add_option(command_s* command, option_s* option)
     memcpy(&command->options[command->option_count], option, sizeof(option_s));
     command->option_count++;
     return true;
+}
+
+bool command_tree_parse_base(command_tree_s* tree, int argc, const char** argv)
+{
+    if (tree == NULL)
+        return false;
+
+    if (argc <= 1)
+        return false;
+
+    tree->parsed_arguments.self = (char*)*argv;
+
+    // skip the calling path that's normally at argv[0]
+    argc--;
+    argv++;
+
+    tree->parsed_arguments.parameter_count = 0;
+    tree->parsed_arguments.argv_count = (size_t)argv;
+    tree->parsed_arguments.parameters = NULL;
+    tree->parsed_arguments.argv_arguments = argv;
+
+    const char* searching_flag_name = *argv;
+    if (!is_flag(searching_flag_name))
+        return false;
+
+    bool found_target = false;
+
+    for (size_t i = 0; i < tree->command_count; ++i)
+    {
+        notation_s* target_notation = &tree->commands[i].notation;
+        bool is_target_set = notation_has_value(target_notation, searching_flag_name);
+
+        if (!is_target_set)
+            continue;
+
+        found_target = true;
+        tree->commands[i].is_set = true;
+        // TODO: do something to init the arguments_s
+
+        break;
+    }
+
+    return found_target;
+}
+
+command_s* command_tree_get_called_command(command_tree_s* tree)
+{
+    if (tree == NULL || tree->commands == NULL || tree->command_count == 0)
+        return NULL;
+
+    for (size_t i = 0; i < tree->command_count; ++i)
+        if (tree->commands[i].is_set)
+            return &tree->commands[i];
+
+    return NULL;
 }

@@ -8,5 +8,8 @@ void command_tree_clean(command_tree_s* tree);
 
 bool command_tree_add_command(command_tree_s* tree, command_s* command);
 
+bool command_tree_parse_base(command_tree_s* tree, int argc, const char** argv);
+command_s* command_tree_get_called_command(command_tree_s* tree);
+
 #endif // !COMMAND_PARSER__COMMAND_TREE_H__
 

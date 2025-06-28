@@ -85,3 +85,23 @@ bool is_flag(const char* value)
 
     return value[0] == '-';
 }
+
+bool notation_has_value(notation_s* notation, const char* value)
+{
+    if (notation == NULL || notation->main_name == NULL)
+        return false;
+
+    if (strcmp(value, notation->main_name) == 0)
+        return true;
+
+    if (notation->aliases == NULL || notation->alias_count == 0)
+        return false;
+
+    for (size_t i = 0; i < notation->alias_count; ++i)
+    {
+        if (strcmp(notation->aliases[i], value) == 0)
+            return true;
+    }
+
+    return false;
+}

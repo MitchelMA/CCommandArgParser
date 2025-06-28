@@ -5,9 +5,12 @@
 
 typedef struct arguments_
 {
-    size_t argument_count;
+    size_t parameter_count;
+    size_t argv_count;
+
     char* self;
     char** parameters;
+    const char** argv_arguments;
 } arguments_s;
 
 typedef struct notation_
@@ -57,6 +60,8 @@ typedef struct command_tree_
 {
     size_t command_capacity;
     size_t command_count;
+    arguments_s parsed_arguments;
+
     command_s* commands;
 } command_tree_s;
 
