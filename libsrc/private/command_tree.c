@@ -1,11 +1,13 @@
 #include "command_tree.h"
 
+#include "command.h"
+
 #include <stdlib.h>
 #include <string.h>
 
 bool command_tree_init(command_tree_s* tree, size_t command_capacity)
 {
-    if (tree == NULL)
+    if (tree == NULL || command_capacity == 0)
         return false;
 
     tree->commands = malloc(sizeof(command_s) * command_capacity);
@@ -19,14 +21,11 @@ bool command_tree_init(command_tree_s* tree, size_t command_capacity)
 
 void command_tree_clean(command_tree_s* tree)
 {
-    if (tree == NULL)
+    if (tree == NULL || tree->command_capacity == 0)
         return;
 
-    if (tree->command_capacity == 0)
-        return;
-
-    // TODO: Loop over all commands in the tree and call the future clean function
-  
+    for (size_t i = 0; i < tree->command_count; ++i)
+        command_clean(&tree->commands[i]);
     
     free(tree->commands);
     tree->commands = NULL;
@@ -41,5 +40,6 @@ bool command_tree_add_command(command_tree_s* tree, command_s* command)
         return false;
 
     memcpy(&tree->commands[tree->command_count], command, sizeof(command_s));
+    tree->command_count++;
     return true;
 }
