@@ -2,10 +2,11 @@
 
 #include "option.h"
 #include "notation.h"
+#include "arguments.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
 #include <stdarg.h>
 
 bool command_init(command_s* command, size_t option_capacity)
@@ -31,7 +32,7 @@ bool command_set_name(command_s* command, const char* name, size_t alias_n, ...)
     bool init_success = false;
 
     va_list alias_args;
-    va_start(alias_args);
+    va_start(alias_args, alias_n);
     init_success = notation_init(&command->notation, name, alias_n, alias_args);
     va_end(alias_args);
 
@@ -53,6 +54,7 @@ void command_clean(command_s* command)
     }
 
     notation_clean(&command->notation);
+    arguments_clean(&command->parsed_arguments);
 }
 
 bool command_add_option(command_s* command, option_s* option)
@@ -68,57 +70,132 @@ bool command_add_option(command_s* command, option_s* option)
     return true;
 }
 
-bool command_tree_parse_base(command_tree_s* tree, int argc, const char** argv)
+bool command_parse(command_s* command)
 {
-    if (tree == NULL)
+    if (command == NULL)
         return false;
 
-    if (argc <= 1)
+    if (command->parsed_arguments.argv_count == 0)
+        return true;
+
+    if (!arguments_prepare_parameters(&command->parsed_arguments))
         return false;
 
-    tree->parsed_arguments.self = (char*)*argv;
 
-    // skip the calling path that's normally at argv[0]
-    argc--;
-    argv++;
-
-    tree->parsed_arguments.parameter_count = 0;
-    tree->parsed_arguments.argv_count = (size_t)argv;
-    tree->parsed_arguments.parameters = NULL;
-    tree->parsed_arguments.argv_arguments = argv;
-
-    const char* searching_flag_name = *argv;
-    if (!is_flag(searching_flag_name))
-        return false;
-
-    bool found_target = false;
-
-    for (size_t i = 0; i < tree->command_count; ++i)
+    if (command->option_count == 0)
     {
-        notation_s* target_notation = &tree->commands[i].notation;
-        bool is_target_set = notation_has_value(target_notation, searching_flag_name);
+        for (size_t i = 0; i < command->parsed_arguments.argv_count; ++i)
+            command->parsed_arguments.parameters[i] = command->parsed_arguments.argv_arguments[i];
 
-        if (!is_target_set)
-            continue;
-
-        found_target = true;
-        tree->commands[i].is_set = true;
-        // TODO: do something to init the arguments_s
-
-        break;
+        command->parsed_arguments.parameter_count = command->parsed_arguments.argv_count;
+        return true;
     }
 
-    return found_target;
+    for (int64_t i = 0; i < (int64_t)command->parsed_arguments.argv_count; ++i)
+    {
+        bool arg_is_flag = is_flag(command->parsed_arguments.argv_arguments[i]);
+        // when argument is not a flag
+        if (!arg_is_flag)
+        {
+            command->parsed_arguments.parameters[command->parsed_arguments.parameter_count] =
+                command->parsed_arguments.argv_arguments[i];
+
+            command->parsed_arguments.parameter_count++;
+            continue;
+        }
+
+        // when the argument is a flag, but not used by any options within this command
+        option_s* found_option = command_find_option(command, command->parsed_arguments.argv_arguments[i]);
+        if (found_option == NULL)
+        {
+            fprintf(stderr, "Found unkown option `%s`\n", command->parsed_arguments.argv_arguments[i]);
+            command->parsed_arguments.parameters[command->parsed_arguments.parameter_count] =
+                command->parsed_arguments.argv_arguments[i];
+
+            command->parsed_arguments.parameter_count++;
+            continue;
+        }
+
+        arguments_init(&found_option->parsed_arguments,
+                       command->parsed_arguments.argv_arguments[i],
+                       command->parsed_arguments.argv_count - (i + 1),
+                       command->parsed_arguments.argv_arguments + (i + 1));
+
+        int consumed = option_parse(found_option);
+        if (consumed < 0)
+        {
+            fprintf(stderr, "Failed to parse flag `%s`: value invalid\n",
+                    command->parsed_arguments.argv_arguments[i]);
+
+            continue;
+        }
+        i += consumed;
+    }
+
+    return true;
 }
 
-command_s* command_tree_get_called_command(command_tree_s* tree)
+bool command_has_missing_required_options(const command_s* command)
 {
-    if (tree == NULL || tree->commands == NULL || tree->command_count == 0)
+    if (command == NULL)
+        return false;
+
+    for (size_t i = 0; i < command->option_count; ++i)
+        if (command->options[i].is_required && command->options[i].set_value == NULL)
+            return true;
+
+    return false;
+}
+
+
+option_s* command_get_missing_required_options(const command_s* command, int* missing_count)
+{
+    if (command == NULL || command->option_count == 0)
+    {
+        *missing_count = 0;
+        return NULL;
+    }
+
+    option_s* ret_arr = malloc(sizeof(option_s) * command->option_count);
+    int missing_required_count = 0;
+    
+    for (size_t i = 0; i < command->option_count; ++i)
+    {
+        if (!command->options[i].is_required || command->options[i].set_value != NULL)
+            continue;
+
+        ret_arr[missing_required_count] = command->options[i];
+        missing_required_count++;
+    }
+
+    *missing_count = missing_required_count;
+    return ret_arr;
+}
+
+option_s* command_find_option(const command_s* command, const char* option_flag)
+{
+    if (command == NULL || command->option_count == 0)
         return NULL;
 
-    for (size_t i = 0; i < tree->command_count; ++i)
-        if (tree->commands[i].is_set)
-            return &tree->commands[i];
+    for (size_t i = 0; i < command->option_count; ++i)
+        if (notation_has_value(&command->options[i].notation, option_flag))
+            return &command->options[i];
 
     return NULL;
+}
+
+const char* command_get_name(const command_s* command)
+{
+    return command->notation.main_name;
+}
+
+const char* command_get_passed_name(const command_s* command)
+{
+    return command->parsed_arguments.self;
+}
+
+const char** command_get_parameters(const command_s* command, int* parameter_count)
+{
+    *parameter_count = command->parsed_arguments.parameter_count;
+    return command->parsed_arguments.parameters;
 }

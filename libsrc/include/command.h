@@ -9,5 +9,14 @@ void command_clean(command_s* command);
 
 bool command_add_option(command_s* command, option_s* option);
 
+bool command_parse(command_s* command);
+bool command_has_missing_required_options(const command_s* command);
+option_s* command_get_missing_required_options(const command_s* command, int* missing_count);
+option_s* command_find_option(const command_s* command, const char* option_flag);
+
+const char* command_get_name(const command_s* command);
+const char* command_get_passed_name(const command_s* command);
+const char** command_get_parameters(const command_s* command, int* parameter_count);
+
 #endif // !COMMAND_PARSER__COMMAND_H__
 

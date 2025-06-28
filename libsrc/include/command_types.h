@@ -8,9 +8,9 @@ typedef struct arguments_
     size_t parameter_count;
     size_t argv_count;
 
-    char* self;
-    char** parameters;
-    const char** argv_arguments;
+    char const* self;
+    const char** parameters;
+    const char* const* argv_arguments;
 } arguments_s;
 
 typedef struct notation_
@@ -40,7 +40,7 @@ typedef struct option_
         bool  bool_value;
         int   int_value;
         float float_value;
-        char* string_value;
+        const char* string_value;
     } default_value;
     void* set_value;
 } option_s;
