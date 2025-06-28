@@ -3,6 +3,20 @@
 
 #include <stddef.h>
 
+typedef struct arguments_
+{
+    size_t argument_count;
+    char* self;
+    char** parameters;
+} arguments_s;
+
+typedef struct notation_
+{
+    size_t alias_count;
+    char* main_name;
+    char** aliases;
+} notation_s;
+
 typedef enum option_type_
 {
     OPTION_TYPE_BOOL,
@@ -14,6 +28,9 @@ typedef enum option_type_
 
 typedef struct option_
 {
+    notation_s notation;
+    arguments_s parsed_arguments;
+
     option_type_e type;
     bool is_required;
     union {
@@ -26,6 +43,10 @@ typedef struct option_
 
 typedef struct command_
 {
+    notation_s notation;
+    arguments_s parsed_arguments;
+
+    bool is_on;
     size_t option_capacity;
     size_t option_count;
     option_s* options;

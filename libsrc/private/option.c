@@ -1,7 +1,10 @@
 #include "option.h"
 
+#include "notation.h"
+
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 // LOCAL FUNCTION DEFINITIONS //
 
@@ -45,6 +48,21 @@ bool option_init(option_s* option, bool is_required, option_type_e option_type, 
     return true;
 }
 
+bool option_set_name(option_s* option, const char* name, size_t alias_n, ...)
+{
+    if (option == NULL || name == NULL)
+        return false;
+
+    bool init_success = false;
+
+    va_list alias_args;
+    va_start(alias_args);
+    init_success = notation_init(&option->notation, name, alias_n, alias_args);
+    va_end(alias_args);
+
+    return init_success;
+}
+
 void option_clean(option_s* option)
 {
     if (option == NULL)
@@ -58,6 +76,8 @@ void option_clean(option_s* option)
     default:
     break;
     }
+
+    notation_clean(&option->notation);
 }
 
 // LOCAL FUNCTION IMPLEMENTATIONS //
