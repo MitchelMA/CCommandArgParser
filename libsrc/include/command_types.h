@@ -5,9 +5,11 @@
 
 typedef enum option_type_
 {
+    OPTION_TYPE_BOOL,
     OPTION_TYPE_INT,
     OPTION_TYPE_FLOAT,
-    OPTION_TYPE_STRING
+    OPTION_TYPE_STRING,
+    MAX_OPTION_TYPE_COUNT
 } option_type_e;
 
 typedef struct option_
@@ -15,6 +17,7 @@ typedef struct option_
     option_type_e type;
     bool is_required;
     union {
+        bool  bool_value;
         int   int_value;
         float float_value;
         char* string_value;

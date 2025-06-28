@@ -18,6 +18,6 @@ if (PROJECT_IS_TOP_LEVEL)
     target_compile_options(CommandParser
         PRIVATE
         -Wall -Wextra -Wpedantic -pedantic -Wundef
-        $<$<STREQUAL:$<UPPER_CASE:${CMAKE_BUILD_TYPE}>,DEBUG>:-O -g -ggdb>
+        $<$<STREQUAL:$<UPPER_CASE:${CMAKE_BUILD_TYPE}>,DEBUG>:-O -g -ggdb --save-temps>
         $<$<STREQUAL:$<UPPER_CASE:${CMAKE_BUILD_TYPE}>,RELEASE>:-Werror -Ofast>)
 endif()
