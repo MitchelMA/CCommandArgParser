@@ -256,21 +256,12 @@ int parse_option__bool_(option_s* option)
     if (option == NULL)
         return 0;
 
-    int consumed_count = 0;
-    const char* value = parse_read_first_val_(option, true, "true", &consumed_count);
-
-    int falsy = strcmp(value, "false");
-    int truethy = strcmp(value, "true");
-
-    if (falsy != 0 && truethy != 0)
-        return -1;
-
     option->set_value = malloc(sizeof(bool));
     if (option->set_value == NULL)
         return -1;
 
-    *(bool*)option->set_value = (bool) (truethy == 0);
-    return consumed_count;
+    *(bool*)option->set_value = true;
+    return 0;
 }
 
 
