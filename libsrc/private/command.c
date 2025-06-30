@@ -135,6 +135,18 @@ bool command_parse(command_s* command)
     return true;
 }
 
+bool command_is_option_present(const command_s* command, const char* option_flag)
+{
+    if (command == NULL)
+        return false;
+
+    for (size_t i = 0; i < command->option_count; ++i)
+        if (notation_has_value(&command->options[i].notation, option_flag))
+            return command->options[i].set_value != NULL;
+
+    return false;
+}
+
 bool command_has_missing_required_options(const command_s* command)
 {
     if (command == NULL)

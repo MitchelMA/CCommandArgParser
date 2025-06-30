@@ -272,6 +272,8 @@ int parse_option__int_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, "0", &consumed_count);
+    if (consumed_count == 0 || text_value == NULL)
+        return -1;
 
     int int_value = atoi(text_value);
 
@@ -291,6 +293,8 @@ int parse_option__float_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, "0.0", &consumed_count);
+    if (consumed_count == 0 || text_value == NULL)
+        return -1;
 
     float float_value = atof(text_value);
 
@@ -310,6 +314,8 @@ static int parse_option__string_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, "", &consumed_count);
+    if (consumed_count == 0 || text_value == NULL)
+        return -1;
 
     option->set_value = malloc(sizeof(char*));
     if (option->set_value == NULL)
