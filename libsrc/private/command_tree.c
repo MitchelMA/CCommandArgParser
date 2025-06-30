@@ -48,6 +48,23 @@ bool command_tree_add_command(command_tree_s* tree, command_s* command)
     return true;
 }
 
+const command_s* command_tree_get_command(const command_tree_s* tree, const char* command_flag)
+{
+    if (tree == NULL || command_flag == NULL)
+        return NULL;
+
+    for (size_t i = 0; i < tree->command_count; ++i)
+        if (command_is_of_flag(&tree->commands[i], command_flag))
+            return &tree->commands[i];
+
+    return NULL;
+}
+
+bool command_tree_has_command(const command_tree_s* tree, const char* command_flag)
+{
+    return command_tree_get_command(tree, command_flag) != NULL;
+}
+
 bool command_tree_parse_base(command_tree_s* tree, int argc, const char** argv)
 {
     if (tree == NULL)

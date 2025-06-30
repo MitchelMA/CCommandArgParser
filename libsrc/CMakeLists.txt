@@ -1,6 +1,6 @@
 add_library(CommandParser)
 
-file(GLOB COMMAND_PARSER_SOURCES ./private/*.c)
+file(GLOB_RECURSE COMMAND_PARSER_SOURCES ./private/*.c)
 
 
 target_sources(CommandParser
