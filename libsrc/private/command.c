@@ -93,7 +93,7 @@ bool command_parse(command_s* command)
 
     for (int64_t i = 0; i < (int64_t)command->parsed_arguments.argv_count; ++i)
     {
-        bool arg_is_flag = is_flag(command->parsed_arguments.argv_arguments[i]);
+        bool arg_is_flag = notation_is_valid_flag(command->parsed_arguments.argv_arguments[i]);
         // when argument is not a flag
         if (!arg_is_flag)
         {
@@ -182,6 +182,11 @@ option_s* command_find_option(const command_s* command, const char* option_flag)
             return &command->options[i];
 
     return NULL;
+}
+
+bool command_is_of_flag(const command_s* command, const char* command_name)
+{
+    return notation_has_value(&command->notation, command_name);
 }
 
 const char* command_get_name(const command_s* command)

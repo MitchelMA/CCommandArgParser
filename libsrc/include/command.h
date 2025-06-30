@@ -14,6 +14,7 @@ bool command_has_missing_required_options(const command_s* command);
 option_s* command_get_missing_required_options(const command_s* command, int* missing_count);
 option_s* command_find_option(const command_s* command, const char* option_flag);
 
+bool command_is_of_flag(const command_s* command, const char* command_name);
 const char* command_get_name(const command_s* command);
 const char* command_get_passed_name(const command_s* command);
 const char** command_get_parameters(const command_s* command, int* parameter_count);

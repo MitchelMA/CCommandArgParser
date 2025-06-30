@@ -243,7 +243,7 @@ const char* parse_read_first_val_(option_s* option, bool flag_can_follow, const 
 {
     const char* value = NULL;
     bool consumes = !flag_can_follow || (option->parsed_arguments.argv_count >= 1 &&
-                    !is_flag(*option->parsed_arguments.argv_arguments));
+                    !notation_is_valid_flag(*option->parsed_arguments.argv_arguments));
 
     // parse --option value
     if (consumes)

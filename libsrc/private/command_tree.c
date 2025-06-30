@@ -63,7 +63,7 @@ bool command_tree_parse_base(command_tree_s* tree, int argc, const char** argv)
     argv++;
 
     const char* searching_flag_name = *argv;
-    if (!is_flag(searching_flag_name))
+    if (!notation_is_valid_flag(searching_flag_name))
         return false;
 
     bool found_target = false;

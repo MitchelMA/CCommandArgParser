@@ -9,7 +9,7 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
     if (notation == NULL || main_name == NULL)
         return false;
 
-    if (!is_flag(main_name))
+    if (!notation_is_valid_flag(main_name))
     {
         fprintf(stderr, "`%s` is not a valid flag name, flags should begin with `-`\n", main_name);
         return false;
@@ -38,7 +38,7 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
     for (size_t i = 0; i < alias_n; ++i)
     {
         const char* val = va_arg(aliases, char*);
-        if (is_flag(val))
+        if (notation_is_valid_flag(val))
         {
             notation->aliases[i] = strdup(val);
             continue;
@@ -78,15 +78,7 @@ void notation_clean(notation_s* notation)
     notation->alias_count = 0;
 }
 
-bool is_flag(const char* value)
-{
-    if (strlen(value) <= 0)
-        return false;
-
-    return value[0] == '-';
-}
-
-bool notation_has_value(notation_s* notation, const char* value)
+bool notation_has_value(const notation_s* notation, const char* value)
 {
     if (notation == NULL || notation->main_name == NULL)
         return false;
@@ -105,3 +97,12 @@ bool notation_has_value(notation_s* notation, const char* value)
 
     return false;
 }
+
+bool notation_is_valid_flag(const char* value)
+{
+    if (strlen(value) <= 0)
+        return false;
+
+    return value[0] == '-';
+}
+
