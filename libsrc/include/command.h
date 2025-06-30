@@ -19,5 +19,11 @@ const char* command_get_name(const command_s* command);
 const char* command_get_passed_name(const command_s* command);
 const char** command_get_parameters(const command_s* command, int* parameter_count);
 
+const void* command_read_option(const command_s* command, const char* option_flag);
+bool command_read_bool_option(const command_s* command, const char* option_flag);
+int command_read_int_option(const command_s* command, const char* option_flag);
+float command_read_float_option(const command_s* command, const char* option_flag);
+const char* command_read_string_option(const command_s* command, const char* option_flag);
+
 #endif // !COMMAND_PARSER__COMMAND_H__
 

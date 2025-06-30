@@ -105,4 +105,3 @@ bool notation_is_valid_flag(const char* value)
 
     return value[0] == '-';
 }
-

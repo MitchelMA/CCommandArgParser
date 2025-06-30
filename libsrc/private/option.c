@@ -125,28 +125,22 @@ bool option_read_value(const option_s* option, void** value)
     if (option == NULL)
         return false;
 
-
     if (value == NULL)
         return false;
 
     if (option->set_value == NULL)
     {
-        // memcpy(*value, &option->default_value, sizeof(void*));
         *value = (void*)&option->default_value;
         return true;
     }
 
-    // memcpy(*value, option->set_value, sizeof(void*));
     *value = option->set_value;
     return true;
 }
 
 bool option_read_bool(const option_s* option)
 {
-    if (option == NULL)
-        return false;
-
-    if (option->type != OPTION_TYPE_BOOL)
+    if (option == NULL || option->type != OPTION_TYPE_BOOL)
         return false;
 
     bool* boolean_value = NULL;
@@ -156,10 +150,7 @@ bool option_read_bool(const option_s* option)
 
 int option_read_int(const option_s* option)
 {
-    if (option == NULL)
-        return 0;
-
-    if (option->type != OPTION_TYPE_INT)
+    if (option == NULL || option->type != OPTION_TYPE_INT)
         return 0;
 
     int* integer_value = NULL;
@@ -169,10 +160,7 @@ int option_read_int(const option_s* option)
 
 float option_read_float(const option_s* option)
 {
-    if (option == NULL)
-        return 0.0f;
-
-    if (option->type != OPTION_TYPE_FLOAT)
+    if (option == NULL || option->type != OPTION_TYPE_FLOAT)
         return 0.0f;
 
     float* float_value = NULL;
@@ -182,10 +170,7 @@ float option_read_float(const option_s* option)
 
 const char* option_read_string(const option_s* option)
 {
-    if (option == NULL)
-        return "";
-
-    if (option->type != OPTION_TYPE_STRING)
+    if (option == NULL || option->type != OPTION_TYPE_STRING)
         return "";
 
     const char** string_value = NULL;
