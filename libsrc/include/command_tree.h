@@ -4,6 +4,7 @@
 #include "command_types.h"
 
 bool command_tree_init(command_tree_s* tree, size_t command_capacity);
+bool command_tree_set_description(command_tree_s* tree, const char* description);
 void command_tree_clean(command_tree_s* tree);
 
 bool command_tree_add_command(command_tree_s* tree, command_s* command);

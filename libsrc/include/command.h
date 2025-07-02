@@ -5,6 +5,7 @@
 
 bool command_init(command_s* command, size_t option_capacity);
 bool command_set_name(command_s* command, const char* name, size_t alias_n, ...);
+bool command_set_description(command_s* command, const char* description);
 void command_clean(command_s* command);
 
 bool command_add_option(command_s* command, option_s* option);
@@ -17,6 +18,7 @@ option_s* command_find_option(const command_s* command, const char* option_flag)
 
 bool command_is_of_flag(const command_s* command, const char* command_name);
 const char* command_get_name(const command_s* command);
+const char* command_get_description(const command_s* command);
 const char* command_get_passed_name(const command_s* command);
 const char** command_get_parameters(const command_s* command, int* parameter_count);
 

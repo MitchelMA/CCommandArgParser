@@ -18,6 +18,7 @@ typedef struct notation_
     size_t alias_count;
     char* main_name;
     char** aliases;
+    char* description;
 } notation_s;
 
 typedef enum option_type_
@@ -63,6 +64,7 @@ typedef struct command_tree_
     arguments_s parsed_arguments;
 
     command_s* commands;
+    char* description;
 } command_tree_s;
 
 #endif // !COMMAND_PARSER__COMMAND_TYPES_H__

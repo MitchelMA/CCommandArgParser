@@ -71,6 +71,14 @@ bool option_set_name(option_s* option, const char* name, size_t alias_n, ...)
     return init_success;
 }
 
+bool option_set_description(option_s* option, const char* description)
+{
+    if (option == NULL)
+        return false;
+
+    return notation_set_description(&option->notation, description);
+}
+
 void option_clean(option_s* option)
 {
     if (option == NULL)
@@ -118,6 +126,14 @@ const char* option_get_name(const option_s* option)
 const char* option_get_passed_name(const option_s* option)
 {
     return option->parsed_arguments.self;
+}
+
+const char* option_get_description(const option_s* option)
+{
+    if (option == NULL)
+        return NULL;
+
+    return option->notation.description;
 }
 
 bool option_read_value(const option_s* option, void** value)

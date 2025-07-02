@@ -39,6 +39,14 @@ bool command_set_name(command_s* command, const char* name, size_t alias_n, ...)
     return init_success;
 }
 
+bool command_set_description(command_s* command, const char* description)
+{
+    if (command == NULL)
+        return false;
+
+    return notation_set_description(&command->notation, description);
+}
+
 void command_clean(command_s* command)
 {
     if (command == NULL)
@@ -209,6 +217,14 @@ const char* command_get_name(const command_s* command)
 const char* command_get_passed_name(const command_s* command)
 {
     return command->parsed_arguments.self;
+}
+
+const char* command_get_description(const command_s* command)
+{
+    if (command == NULL)
+        return NULL;
+
+    return command->notation.description;
 }
 
 const char** command_get_parameters(const command_s* command, int* parameter_count)

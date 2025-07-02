@@ -15,6 +15,8 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
         return false;
     }
 
+    notation->description = NULL;
+
     notation->main_name = strdup(main_name);
     if (notation->main_name == NULL)
         return false;
@@ -48,7 +50,17 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
         notation->aliases[i] = NULL;
     }
 
+
     return true;
+}
+
+bool notation_set_description(notation_s* notation, const char* description)
+{
+    if (notation == NULL || description == NULL)
+        return false;
+
+    notation->description = strdup(description);
+    return notation->description != NULL;
 }
 
 void notation_clean(notation_s* notation)
@@ -56,6 +68,8 @@ void notation_clean(notation_s* notation)
     if (notation == NULL || notation->main_name == NULL)
         return;
 
+    free(notation->description);
+    notation->description = NULL;
     free(notation->main_name);
     notation->main_name = NULL;
 

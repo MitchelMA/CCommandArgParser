@@ -12,6 +12,7 @@ bool command_tree_init(command_tree_s* tree, size_t command_capacity)
     if (tree == NULL || command_capacity == 0)
         return false;
 
+    tree->description = NULL;
     tree->commands = malloc(sizeof(command_s) * command_capacity);
     if (tree->commands == NULL)
         return false;
@@ -19,6 +20,15 @@ bool command_tree_init(command_tree_s* tree, size_t command_capacity)
     tree->command_capacity = command_capacity;
     tree->command_count = 0;
     return true;
+}
+
+bool command_tree_set_description(command_tree_s* tree, const char* description)
+{
+    if (tree == NULL || description == NULL)
+        return false;
+
+    tree->description = strdup(description);
+    return tree->description != NULL;
 }
 
 void command_tree_clean(command_tree_s* tree)
@@ -29,6 +39,8 @@ void command_tree_clean(command_tree_s* tree)
     for (size_t i = 0; i < tree->command_count; ++i)
         command_clean(&tree->commands[i]);
     
+    free(tree->description);
+    tree->description = NULL;
     free(tree->commands);
     tree->commands = NULL;
 
