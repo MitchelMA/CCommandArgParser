@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
-project(CommandParser
+project(CCommandArgParser
     VERSION 0.1.0
-    DESCRIPTION "Simpele crossplatform command parser in C"
+    DESCRIPTION "Simpele crossplatform command argument parser in C"
     LANGUAGES C)
 
 if (PROJECT_IS_TOP_LEVEL)
@@ -10,12 +10,12 @@ endif()
 
 add_subdirectory(./libsrc)
 
-target_compile_options(CommandParser
+target_compile_options(CCommandArgParser
     PRIVATE 
     -std=gnu23)
 
 if (PROJECT_IS_TOP_LEVEL)
-    target_compile_options(CommandParser
+    target_compile_options(CCommandArgParser
         PRIVATE
         -Wall -Wextra -Wpedantic -pedantic -Wundef
         $<$<STREQUAL:$<UPPER_CASE:${CMAKE_BUILD_TYPE}>,DEBUG>:-O -g -ggdb --save-temps>
