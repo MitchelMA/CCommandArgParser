@@ -312,7 +312,7 @@ int parse_option__float_(option_s* option)
     if (consumed_count == 0 || text_value == NULL)
         return -1;
 
-    float float_value = atof(text_value);
+    float float_value = (float)atof(text_value);
 
     option->set_value = malloc(sizeof(float));
     if (option->set_value == NULL)

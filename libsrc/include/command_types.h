@@ -2,6 +2,16 @@
 #define COMMAND_PARSER__COMMAND_TYPES_H__
 
 #include <stddef.h>
+#include <stdbool.h>
+
+typedef enum option_type_
+{
+    OPTION_TYPE_BOOL,
+    OPTION_TYPE_INT,
+    OPTION_TYPE_FLOAT,
+    OPTION_TYPE_STRING,
+    MAX_OPTION_TYPE_COUNT
+} option_type_e;
 
 typedef struct arguments_
 {
@@ -20,15 +30,6 @@ typedef struct notation_
     char** aliases;
     char* description;
 } notation_s;
-
-typedef enum option_type_
-{
-    OPTION_TYPE_BOOL,
-    OPTION_TYPE_INT,
-    OPTION_TYPE_FLOAT,
-    OPTION_TYPE_STRING,
-    MAX_OPTION_TYPE_COUNT
-} option_type_e;
 
 typedef struct option_
 {

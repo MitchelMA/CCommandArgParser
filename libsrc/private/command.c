@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 bool command_init(command_s* command, size_t option_capacity)
 {
@@ -126,7 +127,7 @@ bool command_parse(command_s* command)
 
         arguments_init(&found_option->parsed_arguments,
                        command->parsed_arguments.argv_arguments[i],
-                       command->parsed_arguments.argv_count - (i + 1),
+                       (int)command->parsed_arguments.argv_count - ((int)i + 1),
                        command->parsed_arguments.argv_arguments + (i + 1));
 
         int consumed = option_parse(found_option);
@@ -229,7 +230,7 @@ const char* command_get_description(const command_s* command)
 
 const char** command_get_parameters(const command_s* command, int* parameter_count)
 {
-    *parameter_count = command->parsed_arguments.parameter_count;
+    *parameter_count = (int)command->parsed_arguments.parameter_count;
     return command->parsed_arguments.parameters;
 }
 
