@@ -8,7 +8,7 @@
 typedef struct shared_value_
 {
     size_t value_mem_size_;
-    int64_t** counter_;
+    int64_t* counter_;
     void* value_;
 } shared_value_s;
 
