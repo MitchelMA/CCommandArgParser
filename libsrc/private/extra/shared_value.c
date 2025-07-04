@@ -57,6 +57,7 @@ void shared_value_clean(shared_value_s* value)
 
     value->value_ = NULL;
     value->counter_ = NULL;
+    value->value_mem_size_ = 0;
 }
 
 int64_t shared_value_use_count(const shared_value_s* value)
@@ -70,9 +71,6 @@ int64_t shared_value_use_count(const shared_value_s* value)
 bool shared_value_copy_into(shared_value_s* restrict dest, shared_value_s* restrict src)
 {
     if (dest == NULL || !IS_SHARED_VALUE_SAFE(src))
-        return false;
-
-    if (!shared_value_init_empty_(dest, src->value_mem_size_))
         return false;
 
     dest->counter_ = src->counter_;
