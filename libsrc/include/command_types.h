@@ -1,6 +1,8 @@
 #ifndef COMMAND_PARSER__COMMAND_TYPES_H__
 #define COMMAND_PARSER__COMMAND_TYPES_H__
 
+#include "extra/shared_value.h"
+
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -33,7 +35,7 @@ typedef struct notation_
 
 typedef struct option_
 {
-    notation_s notation;
+    shared_value_s shared_notation; // underlying: notation_s
     arguments_s parsed_arguments;
 
     option_type_e type;

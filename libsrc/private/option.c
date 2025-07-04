@@ -27,6 +27,12 @@ bool option_init(option_s* option, bool is_required, option_type_e option_type, 
     if (option == NULL || option_type >= MAX_OPTION_TYPE_COUNT)
         return false;
 
+    if (!shared_value_init_unused(&option->shared_notation, sizeof(notation_s)))
+    {
+        shared_value_clean(&option->shared_notation);
+        return false;
+    }
+
     option->set_value = NULL;
 
     bool init_success = false;
@@ -65,7 +71,7 @@ bool option_set_name(option_s* option, const char* name, size_t alias_n, ...)
 
     va_list alias_args;
     va_start(alias_args, alias_n);
-    init_success = notation_init(&option->notation, name, alias_n, alias_args);
+    init_success = notation_init((notation_s*)shared_value_read(&option->shared_notation), name, alias_n, alias_args);
     va_end(alias_args);
 
     return init_success;
@@ -76,7 +82,7 @@ bool option_set_description(option_s* option, const char* description)
     if (option == NULL)
         return false;
 
-    return notation_set_description(&option->notation, description);
+    return notation_set_description((notation_s*)shared_value_read(&option->shared_notation), description);
 }
 
 void option_clean(option_s* option)
@@ -84,9 +90,13 @@ void option_clean(option_s* option)
     if (option == NULL)
         return;
 
-    notation_clean(&option->notation);
     arguments_clean(&option->parsed_arguments);
     free(option->set_value);
+
+    if (shared_value_use_count(&option->shared_notation) < 2)
+        notation_clean(shared_value_read(&option->shared_notation));
+
+    shared_value_clean(&option->shared_notation);
 }
 
 int option_parse(option_s* option)
@@ -120,7 +130,14 @@ int option_parse(option_s* option)
 
 const char* option_get_name(const option_s* option)
 {
-    return option->notation.main_name;
+    if (option == NULL)
+        return NULL;
+
+    const notation_s* notation = shared_value_read_const(&option->shared_notation);
+    if (notation == NULL)
+        return NULL;
+
+    return notation->main_name;
 }
 
 const char* option_get_passed_name(const option_s* option)
@@ -133,7 +150,11 @@ const char* option_get_description(const option_s* option)
     if (option == NULL)
         return NULL;
 
-    return option->notation.description;
+    const notation_s* notation = shared_value_read_const(&option->shared_notation);
+    if (notation == NULL)
+        return NULL;
+
+    return notation->description;
 }
 
 bool option_read_value(const option_s* option, void** value)
@@ -280,7 +301,6 @@ int parse_option__bool_(option_s* option)
     return 0;
 }
 
-
 int parse_option__int_(option_s* option)
 {
     if (option == NULL)
@@ -301,7 +321,6 @@ int parse_option__int_(option_s* option)
     return consumed_count;
 }
 
-
 int parse_option__float_(option_s* option)
 {
     if (option == NULL)
@@ -321,7 +340,6 @@ int parse_option__float_(option_s* option)
     *(float*)option->set_value = float_value;
     return consumed_count;
 }
-
 
 static int parse_option__string_(option_s* option)
 {

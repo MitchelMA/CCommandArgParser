@@ -75,6 +75,12 @@ bool command_add_option(command_s* command, option_s* option)
         return false;
 
     memcpy(&command->options[command->option_count], option, sizeof(option_s));
+    if (!shared_value_copy_into(&command->options->shared_notation, &option->shared_notation))
+    {
+        // Reset back to 0 value on failure
+        memset(&command->options[command->option_count], 0, sizeof(option_s));
+        return false;
+    }
     command->option_count++;
     return true;
 }
@@ -150,7 +156,7 @@ bool command_is_option_present(const command_s* command, const char* option_flag
         return false;
 
     for (size_t i = 0; i < command->option_count; ++i)
-        if (notation_has_value(&command->options[i].notation, option_flag))
+        if (notation_has_value(shared_value_read_const(&command->options[i].shared_notation), option_flag))
             return command->options[i].set_value != NULL;
 
     return false;
@@ -199,7 +205,7 @@ option_s* command_find_option(const command_s* command, const char* option_flag)
         return NULL;
 
     for (size_t i = 0; i < command->option_count; ++i)
-        if (notation_has_value(&command->options[i].notation, option_flag))
+        if (notation_has_value(shared_value_read_const(&command->options[i].shared_notation), option_flag))
             return &command->options[i];
 
     return NULL;
