@@ -124,3 +124,4 @@ bool shared_value_init_empty_(shared_value_s* value, size_t mem_size)
 }
 
 // END LOCAL IMPLEMENTATIONS //
+
