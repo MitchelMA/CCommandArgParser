@@ -75,7 +75,7 @@ bool command_add_option(command_s* command, option_s* option)
         return false;
 
     memcpy(&command->options[command->option_count], option, sizeof(option_s));
-    if (!shared_value_copy_into(&command->options->shared_notation, &option->shared_notation))
+    if (!shared_value_copy_into(&command->options[command->option_count].shared_notation, &option->shared_notation))
     {
         // Reset back to 0 value on failure
         memset(&command->options[command->option_count], 0, sizeof(option_s));
