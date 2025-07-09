@@ -264,8 +264,8 @@ bool init_option_default__string_(option_s* option, void* default_value)
 const char* parse_read_first_val_(option_s* option, bool flag_can_follow, const char* default_present, int* consumed)
 {
     const char* value = NULL;
-    bool consumes = !flag_can_follow || (option->parsed_arguments.argv_count >= 1 &&
-                    !notation_is_valid_flag(*option->parsed_arguments.argv_arguments));
+    bool consumes = option->parsed_arguments.argv_count >= 1 &&
+                    (!flag_can_follow || !notation_is_valid_flag(*option->parsed_arguments.argv_arguments));
 
     // parse --option value
     if (consumes)
@@ -308,7 +308,7 @@ int parse_option__int_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, "0", &consumed_count);
-    if (consumed_count == 0 || text_value == NULL)
+    if (text_value == NULL)
         return -1;
 
     int int_value = atoi(text_value);
@@ -328,7 +328,7 @@ int parse_option__float_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, "0.0", &consumed_count);
-    if (consumed_count == 0 || text_value == NULL)
+    if (text_value == NULL)
         return -1;
 
     float float_value = (float)atof(text_value);
@@ -347,7 +347,7 @@ static int parse_option__string_(option_s* option)
         return 0;
 
     int consumed_count = 0;
-    const char* text_value = parse_read_first_val_(option, false, "", &consumed_count);
+    const char* text_value = parse_read_first_val_(option, false, NULL, &consumed_count);
     if (consumed_count == 0 || text_value == NULL)
         return -1;
 
