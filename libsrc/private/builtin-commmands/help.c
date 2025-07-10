@@ -5,10 +5,11 @@
 #include "option.h"
 
 static const char* HELP_TYPE_DESCRIPTORS[MAX_OPTION_TYPE_COUNT] = {
-    [OPTION_TYPE_BOOL]   = "<Flag>",
-    [OPTION_TYPE_INT]    = "<Number: 1;2;3>",
-    [OPTION_TYPE_FLOAT]  = "<Number: 1.0;2.0>",
-    [OPTION_TYPE_STRING] = "<Text>"
+    [OPTION_TYPE_BOOL]         = "<Flag>",
+    [OPTION_TYPE_INT]          = "<Number: 1;2;3>",
+    [OPTION_TYPE_FLOAT]        = "<Number: 1.0;2.0>",
+    [OPTION_TYPE_STRING]       = "<Text>",
+    [OPTION_TYPE_MULTI_STRING] = "<Multi-Text>"
 };
 
 bool command_tree_add_help(command_tree_s* command_tree)
@@ -116,7 +117,7 @@ void print_option_inline_help(FILE* stream, const option_s* option)
     if (stream == NULL || option == NULL)
         return;
 
-    fprintf(stream, "\t%-1s%-10s ",
+    fprintf(stream, "\t%-1s%-15s ",
             option->is_required ? "*" : "",
             option_get_name(option));
 
