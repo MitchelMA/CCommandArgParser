@@ -27,6 +27,7 @@ bool command_read_bool_option(const command_s* command, const char* option_flag)
 int command_read_int_option(const command_s* command, const char* option_flag);
 float command_read_float_option(const command_s* command, const char* option_flag);
 const char* command_read_string_option(const command_s* command, const char* option_flag);
+const char** command_read_multi_string_option(const command_s* command, const char* option_flag, size_t* string_count);
 
 #endif // !COMMAND_PARSER__COMMAND_H__
 

@@ -19,6 +19,7 @@ bool option_read_bool(const option_s* option);
 int option_read_int(const option_s* option);
 float option_read_float(const option_s* option);
 const char* option_read_string(const option_s* option);
+const char** option_read_multi_string(const option_s* option, size_t* count);
 
 #endif // !COMMAND_PARSER__OPTION_H__
 

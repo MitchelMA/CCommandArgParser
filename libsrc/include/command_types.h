@@ -12,6 +12,7 @@ typedef enum option_type_
     OPTION_TYPE_INT,
     OPTION_TYPE_FLOAT,
     OPTION_TYPE_STRING,
+    OPTION_TYPE_MULTI_STRING,
     MAX_OPTION_TYPE_COUNT
 } option_type_e;
 
@@ -44,7 +45,8 @@ typedef struct option_
         bool  bool_value;
         int   int_value;
         float float_value;
-        const char* string_value;
+        const char*  string_value;
+        char** multi_string_value;
     } default_value;
     void* set_value;
 } option_s;

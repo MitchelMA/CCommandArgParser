@@ -242,7 +242,7 @@ const char** command_get_parameters(const command_s* command, int* parameter_cou
 
 const void* command_read_option(const command_s* command, const char* option_flag)
 {
-    option_s* found_option = command_find_option(command, option_flag);
+    const option_s* found_option = command_find_option(command, option_flag);
     if (found_option == NULL)
         return NULL;
 
@@ -255,24 +255,31 @@ const void* command_read_option(const command_s* command, const char* option_fla
 
 bool command_read_bool_option(const command_s* command, const char* option_flag)
 {
-    option_s* found_option = command_find_option(command, option_flag);
+    const option_s* found_option = command_find_option(command, option_flag);
     return option_read_bool(found_option);
 }
 
 int command_read_int_option(const command_s* command, const char* option_flag)
 {
-    option_s* found_option = command_find_option(command, option_flag);
+    const option_s* found_option = command_find_option(command, option_flag);
     return option_read_int(found_option);
 }
 
 float command_read_float_option(const command_s* command, const char* option_flag)
 {
-    option_s* found_option = command_find_option(command, option_flag);
+    const option_s* found_option = command_find_option(command, option_flag);
     return option_read_float(found_option);
 }
 
 const char* command_read_string_option(const command_s* command, const char* option_flag)
 {
-    option_s* found_option = command_find_option(command, option_flag);
+    const option_s* found_option = command_find_option(command, option_flag);
     return option_read_string(found_option);
 }
+
+const char** command_read_multi_string_option(const command_s* command, const char* option_flag, size_t* string_count)
+{
+    const option_s* found_option = command_find_option(command, option_flag);
+    return option_read_multi_string(found_option, string_count);
+}
+

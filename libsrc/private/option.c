@@ -13,12 +13,16 @@ static bool init_option_default__bool_(option_s* option, void* default_value);
 static bool init_option_default__int_(option_s* option, void* default_value);
 static bool init_option_default__float_(option_s* option, void* default_value);
 static bool init_option_default__string_(option_s* option, void* default_value);
+static bool init_option_default__multi_string_(option_s* option, void* default_value);
 
 static const char* parse_read_first_val_(option_s* option, bool flag_can_follow, const char* default_present, int* consumed);
 static int parse_option__bool_(option_s* option);
 static int parse_option__int_(option_s* option);
 static int parse_option__float_(option_s* option);
 static int parse_option__string_(option_s* option);
+static int parse_option__multi_string_(option_s* option);
+
+static void clean_option__multi_string_(option_s* option);
 
 // END LOCAL FUNCTION DEFINITIONS //
 
@@ -50,6 +54,8 @@ bool option_init(option_s* option, bool is_required, option_type_e option_type, 
     case OPTION_TYPE_STRING:
         init_success = init_option_default__string_(option, default_value);
     break;
+    case OPTION_TYPE_MULTI_STRING:
+        init_success = init_option_default__multi_string_(option, default_value);
     default:
     break;
     }
@@ -90,6 +96,16 @@ void option_clean(option_s* option)
     if (option == NULL)
         return;
 
+    switch (option->type)
+    {
+    case OPTION_TYPE_MULTI_STRING:
+        clean_option__multi_string_(option);
+    break;
+
+    default:
+    break;
+    }
+
     arguments_clean(&option->parsed_arguments);
     free(option->set_value);
 
@@ -119,6 +135,9 @@ int option_parse(option_s* option)
     break;
     case OPTION_TYPE_STRING:
         arguments_consumed = parse_option__string_(option);
+    break;
+    case OPTION_TYPE_MULTI_STRING:
+        arguments_consumed = parse_option__multi_string_(option);
     break;
 
     default:
@@ -215,6 +234,27 @@ const char* option_read_string(const option_s* option)
     return *string_value;
 }
 
+const char** option_read_multi_string(const option_s* option, size_t* count)
+{
+    if (option == NULL || option->type != OPTION_TYPE_MULTI_STRING)
+        return NULL;
+
+    const char** string_array = NULL;
+    if (!option_read_value(option, (void**)&string_array))
+        return NULL;
+
+    // Since the multi-string is stored differently than the other values.
+    // And `option_read_value` is a generic funtion, we need to discard one level of indirection.
+    if (option->set_value == NULL)
+        string_array = (const char**)*string_array;
+
+    // Since the string-array is also NULL-terminated, we can calulate it's length by looping
+    if (count != NULL && string_array != NULL)
+        for (*count = 0; string_array[*count] != NULL; ++(*count)) {};
+
+    return string_array;
+}
+
 // LOCAL FUNCTION IMPLEMENTATIONS //
 
 bool init_option_default__bool_(option_s* option, void* default_value)
@@ -258,6 +298,38 @@ bool init_option_default__string_(option_s* option, void* default_value)
     else
         option->default_value.string_value = NULL;
 
+    return true;
+}
+
+bool init_option_default__multi_string_(option_s* option, void* default_value)
+{
+    if (default_value == NULL)
+    {
+        option->default_value.multi_string_value = NULL;
+        return true;
+    }
+
+    // loop over the default value assuming its a char** array with the last value being a NULL value
+    const char** items = default_value;
+    size_t item_count = 0;
+    for (item_count = 0; items[item_count] != NULL; ++item_count) {};
+    if (item_count == 0)
+        return true;
+
+    // encode it such that the ending entry is always a NULL value
+    // so it becomes a NULL terminated array
+    option->default_value.multi_string_value = malloc(sizeof(char*) * (item_count + 1));
+    if (option->default_value.multi_string_value == NULL)
+        return false;
+
+    for (size_t i = 0; i < item_count; ++i)
+    {
+        option->default_value.multi_string_value[i] = strdup(items[i]);
+        if (option->default_value.multi_string_value[i] == NULL)
+            return false;
+    }
+
+    option->default_value.multi_string_value[item_count] = NULL;
     return true;
 }
 
@@ -341,7 +413,7 @@ int parse_option__float_(option_s* option)
     return consumed_count;
 }
 
-static int parse_option__string_(option_s* option)
+int parse_option__string_(option_s* option)
 {
     if (option == NULL)
         return 0;
@@ -357,6 +429,55 @@ static int parse_option__string_(option_s* option)
 
     *(const char**)option->set_value = text_value;
     return consumed_count;
+}
+
+int parse_option__multi_string_(option_s* option)
+{
+    if (option == NULL)
+        return 0;
+
+    int valid_arg_count = 0;
+    for (; valid_arg_count < (int)option->parsed_arguments.argv_count &&
+         !notation_is_valid_flag(option->parsed_arguments.argv_arguments[valid_arg_count]);
+         ++valid_arg_count) {};
+
+    // at elast 1 value is required
+    if (valid_arg_count < 1)
+        return -1;
+
+    option->set_value = malloc(sizeof(char*) * (valid_arg_count + 1));
+    if (option->set_value == NULL)
+        return -1;
+
+    option->parsed_arguments.parameters = malloc(sizeof(char*) * valid_arg_count);
+    if (option->parsed_arguments.parameters == NULL)
+    {
+        free(option->set_value);
+        option->set_value = NULL;
+        return -1;
+    }
+
+    option->parsed_arguments.parameter_count = valid_arg_count;
+
+    for (int i = 0; i < valid_arg_count; ++i)
+    {
+        ((const char**)option->set_value)[i] = option->parsed_arguments.argv_arguments[i];
+        option->parsed_arguments.parameters[i] = option->parsed_arguments.argv_arguments[i];
+    }
+
+    ((char**)option->set_value)[valid_arg_count] = NULL;
+    return valid_arg_count;
+}
+
+void clean_option__multi_string_(option_s* option)
+{
+    if (option == NULL || option->type != OPTION_TYPE_MULTI_STRING || option->default_value.multi_string_value == NULL)
+        return;
+
+    for (size_t i = 0; option->default_value.multi_string_value[i] != NULL; ++i)
+        free(option->default_value.multi_string_value[i]);
+
+    free(option->default_value.multi_string_value);
 }
 
 // END LOCAL FUNCTION IMPLEMENTATIONS //
