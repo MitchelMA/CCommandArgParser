@@ -249,7 +249,7 @@ const char** option_read_multi_string(const option_s* option, size_t* count)
         string_array = (const char**)*string_array;
 
     // Since the string-array is also NULL-terminated, we can calulate it's length by looping
-    if (count != NULL && string_array != NULL)
+    if (count != NULL)
         for (*count = 0; string_array[*count] != NULL; ++(*count)) {};
 
     return string_array;
