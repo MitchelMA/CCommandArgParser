@@ -45,7 +45,7 @@ typedef struct option_
         bool  bool_value;
         int   int_value;
         float float_value;
-        const char*  string_value;
+        char*  string_value;
         char** multi_string_value;
     } default_value;
     void* set_value;

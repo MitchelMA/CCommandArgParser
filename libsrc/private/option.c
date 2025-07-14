@@ -22,6 +22,7 @@ static int parse_option__float_(option_s* option);
 static int parse_option__string_(option_s* option);
 static int parse_option__multi_string_(option_s* option);
 
+static void clean_option__string_(option_s* option);
 static void clean_option__multi_string_(option_s* option);
 
 // END LOCAL FUNCTION DEFINITIONS //
@@ -98,6 +99,9 @@ void option_clean(option_s* option)
 
     switch (option->type)
     {
+    case OPTION_TYPE_STRING:
+        clean_option__string_(option);
+    break;
     case OPTION_TYPE_MULTI_STRING:
         clean_option__multi_string_(option);
     break;
@@ -467,6 +471,14 @@ int parse_option__multi_string_(option_s* option)
 
     ((char**)option->set_value)[valid_arg_count] = NULL;
     return valid_arg_count;
+}
+
+void clean_option__string_(option_s* option)
+{
+    if (option == NULL || option->type != OPTION_TYPE_STRING || option->default_value.string_value == NULL)
+        return;
+
+    free(option->default_value.string_value);
 }
 
 void clean_option__multi_string_(option_s* option)
