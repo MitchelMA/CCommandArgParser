@@ -1,11 +1,11 @@
 #ifndef COMMAND_PARSER__COMMAND_TYPES_H__
 #define COMMAND_PARSER__COMMAND_TYPES_H__
 
-/**
+/** \file command_types.h
  * This header file contains all the defenitions of the immediate values
  * used within the command-tree structure important to the user:
  *  - Enum: `option_type_e`; the different types of options
- *  - Struct: `argument_s`; the structure containg argument information for commands/options.
+ *  - Struct: `arguments_s`; the structure containg argument information for commands/options.
  *  - Struct: `notation_s`; the structure containing the info on how a command/option should be addressed.
  *  - Struct: `option_s`; the option can be an extra flag containing data registered to a command
  *  - Struct: `command_s`; the command is the first called flag in argv and should indicate the main logic of what the caller wants to do, it is registered to a `command_tree_s`.
@@ -17,7 +17,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/** `option_type_e` enum used by `option_s`
+/**
  * This enum is used by `option_s` to denote what type of option it is.
  */
 typedef enum option_type_

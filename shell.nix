@@ -7,6 +7,8 @@ pkgs.mkShell {
     cmake
     tmux
     gdb
+
+    doxygen
   ];
 
   shellHook = ''
