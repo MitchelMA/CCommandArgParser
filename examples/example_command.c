@@ -23,7 +23,7 @@ int main(/* ... */)
     // Now finally, the last thing to be done before the command can be added to the tree
     // We're going to add an option:
     // For this example, it's a boolean option.
-    command_add_option(&main_command,    // Command pointer
+    command_add_option(&main_command,  // Command pointer
                        &boolean_option // pointer to the option
                        );
     // This add function returns true or false, depending on if there's enough space available for the option to be added.
