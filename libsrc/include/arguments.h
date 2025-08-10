@@ -16,7 +16,7 @@
  * @param argc The counter of `argv_arguments` array.
  * @param argv_arguments The argv_arguments passed on from `main()` that are relevant to this arguments_s and onwards.
  *
- * @return _false_ when either **arguments** or **self** is NULL, otherwise _true_ is returned.
+ * @return _false_ when either **arguments** or **self** is `NULL`, otherwise _true_ is returned.
  */
 bool arguments_init(arguments_s* arguments, const char* self, int argc, const char* const* argv_arguments);
 
@@ -27,7 +27,7 @@ bool arguments_init(arguments_s* arguments, const char* self, int argc, const ch
  * This function prepares the `parameter` member of `arguments` by heap allocation.
  * This allocation is always the same length as `argv_arguments`.
  *
- * @return _false_ when **arguments** is NULL, otherwise _true_.
+ * @return _false_ when **arguments** is `NULL`, otherwise _true_.
  */
 bool arguments_prepare_parameters(arguments_s* arguments);
 

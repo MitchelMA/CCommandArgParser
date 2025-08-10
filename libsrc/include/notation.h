@@ -18,7 +18,7 @@
  * @param aliases A va-list of `const char*` items with a length of **alias_n**.
  *
  * @return
- * _false_ when **notation** or **main_name** is NULL.  
+ * _false_ when **notation** or **main_name** is `NULL`.  
  * _false_ when **main_name** is invalid as described by `notation_is_valid_flag()`.  
  * _false_ on any allocation failure, be it a call to `malloc()` or `strdup()`.  
  * _true_ when none of the aforementioned apply.
@@ -32,8 +32,8 @@ bool notation_init(notation_s* notation, const char* main_name, size_t alias_n, 
  * @param description The description whose value it's going to be set with.
  *
  * @return
- * _false_ when either **notation** or **description is NULL.  
- * _false_ when strdup fails.  
+ * _false_ when either **notation** or **description** is `NULL`.  
+ * _false_ when `strdup()` fails.
  * _true_ when aforementioned do not apply.
  */
 bool notation_set_description(notation_s* notation, const char* description);
