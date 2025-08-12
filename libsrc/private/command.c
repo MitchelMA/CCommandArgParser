@@ -123,7 +123,7 @@ bool command_parse(command_s* command)
         option_s* found_option = command_find_option(command, command->parsed_arguments.argv_arguments[i]);
         if (found_option == NULL)
         {
-            fprintf(stderr, "Found unkown option `%s`\n", command->parsed_arguments.argv_arguments[i]);
+            fprintf(stderr, "Found unknown option `%s`\n", command->parsed_arguments.argv_arguments[i]);
             command->parsed_arguments.parameters[command->parsed_arguments.parameter_count] =
                 command->parsed_arguments.argv_arguments[i];
 
