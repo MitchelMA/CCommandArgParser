@@ -62,7 +62,10 @@ bool option_init(option_s* option, bool is_required, option_type_e option_type, 
     }
 
     if (!init_success)
+    {
+        shared_value_clean(&option->shared_notation);
         return false;
+    }
 
     option->type = option_type;
     option->is_required = is_required;
