@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: ./.github/workflows/doxygen-deploy.yml
+      - uses: ./.github/workflows/doxygen-deploy.yml@main
         with:
           branch: gh-pages
           folder: doxygen_docs/html
