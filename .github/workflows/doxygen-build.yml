@@ -5,17 +5,20 @@ name: Build Doxygen Workflow
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  build:
-    # The type of runner that the job will run on
+  deploy:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    permissions:
+      contents: write
     steps:
-    # Runs a single command using the runners shell
-    - name: Build Doxygen
-      run: doxygen doxygen.txt
+      - uses: ./.github/workflows/doxygen-deploy.yml
+        with:
+          branch: gh-pages
+          folder: doxygen_docs/html
+          config_file: doxygen.txt
+          doxygen_version: 1.9.6
