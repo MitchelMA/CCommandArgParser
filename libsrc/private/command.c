@@ -199,6 +199,29 @@ option_s* command_get_missing_required_options(const command_s* command, int* mi
     return ret_arr;
 }
 
+
+size_t
+command_get_missing_required_options_static(
+    const command_s* command,
+    option_s* missing_buffer,
+    size_t buffer_length
+)
+{
+    if (command == NULL || command->option_count == 0 || missing_buffer == NULL || buffer_length == 0)
+        return 0;
+
+    size_t missing_required_count = 0;
+    for (size_t i = 0; i < command->option_count && missing_required_count < buffer_length; ++i)
+    {
+        if (!command->options[i].is_required || command->options[i].set_value != NULL)
+            continue;
+
+        missing_buffer[missing_required_count++] = command->options[i];
+    }
+
+    return missing_required_count;
+}
+
 option_s* command_find_option(const command_s* command, const char* option_flag)
 {
     if (command == NULL || command->option_count == 0)
