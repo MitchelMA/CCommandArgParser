@@ -30,4 +30,5 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
+          path: main
           sparse-checkout: ./examples
