@@ -10,14 +10,13 @@ on:
       - main
   workflow_dispatch:
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: [BLANK]
+      - uses: ./.github/workflows/doxygen-deploy.yml
         with:
           branch: gh-pages
           folder: doxygen_docs/html
