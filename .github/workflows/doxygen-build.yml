@@ -23,4 +23,12 @@ jobs:
           folder: doxygen_docs/html
           target_folder: docs/
           config_file: doxygen.txt
-          doxygen_version: 1.9.6
+          doxygen_version: 1.13.2
+          
+  CopyExamples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          git checkout main examples
+          mv examples docs/examples
