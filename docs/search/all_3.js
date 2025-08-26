@@ -1,18 +1,16 @@
 var searchData=
 [
-  ['c_0',['C',['../classC.html',1,'']]],
-  ['c1_1',['C1',['../classC1.html',1,'']]],
-  ['c2_2',['C2',['../classC2.html',1,'']]],
-  ['c3_3',['C3',['../classC3.html',1,'']]],
-  ['c4_4',['C4',['../classC4.html',1,'']]],
-  ['c5_5',['C5',['../classC5.html',1,'']]],
-  ['car_6',['Car',['../structCar.html',1,'']]],
-  ['classvar_7',['classVar',['../classpyexample_1_1PyClass.html#abd17aff54e5b0ca194020c796c733546',1,'pyexample::PyClass']]],
-  ['close_8',['close',['../structcmd_8h.html#ae152484c890a24e4d9b4980e7b965be0',1,'structcmd.h']]],
-  ['command_20argument_20parser_9',['Command Argument Parser',['../index.html',1,'']]],
-  ['command_5fs_10',['command_s',['../structcommand__s.html',1,'']]],
-  ['command_5ftree_5fs_11',['command_tree_s',['../structcommand__tree__s.html',1,'']]],
-  ['command_5ftypes_2eh_12',['command_types.h',['../command__types_8h.html',1,'']]],
-  ['coord_13',['Coord',['../restypedef_8cpp.html#a013489fb99c6a5b012db8ec66544a507',1,'restypedef.cpp']]],
-  ['coordstruct_14',['CoordStruct',['../structCoordStruct.html',1,'']]]
+  ['option_2eh_0',['option.h',['../option_8h.html',1,'']]],
+  ['option_5fclean_1',['option_clean',['../option_8h.html#a9a0a555dfbc436d5a0eb5448ff223848',1,'option.c']]],
+  ['option_5finit_2',['option_init',['../option_8h.html#acf381b2de33120e89d4d45c1f86d072c',1,'option.c']]],
+  ['option_5fparse_3',['option_parse',['../option_8h.html#a5c79b5968a04949ab5b8404076759e5f',1,'option.c']]],
+  ['option_5fs_4',['option_s',['../structoption__s.html',1,'']]],
+  ['option_5fset_5fdescription_5',['option_set_description',['../option_8h.html#a76dbf13e6018d1661b849337c7a85885',1,'option.c']]],
+  ['option_5fset_5fname_6',['option_set_name',['../option_8h.html#a772038fcce9f1b2835621f0a3883ddea',1,'option.c']]],
+  ['option_5ftype_5fbool_7',['OPTION_TYPE_BOOL',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9fadbb8998f294fdb68058487e1f3fd584b',1,'command_types.h']]],
+  ['option_5ftype_5fe_8',['option_type_e',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9f',1,'command_types.h']]],
+  ['option_5ftype_5ffloat_9',['OPTION_TYPE_FLOAT',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9fa44318af6741a17e9c7198f29a8f38156',1,'command_types.h']]],
+  ['option_5ftype_5fint_10',['OPTION_TYPE_INT',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9fa17ac0e61cb27d1b3879cd88e6565ca38',1,'command_types.h']]],
+  ['option_5ftype_5fmulti_5fstring_11',['OPTION_TYPE_MULTI_STRING',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9fa35230a441efbf16e01ca07ce3b1dd506',1,'command_types.h']]],
+  ['option_5ftype_5fstring_12',['OPTION_TYPE_STRING',['../command__types_8h.html#a493efbd4033206ee546f1d4df5f22a9faa2110b97a8b4bd72d660d49ec574dd34',1,'command_types.h']]]
 ];
