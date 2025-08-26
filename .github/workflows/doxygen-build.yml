@@ -24,13 +24,3 @@ jobs:
           target_folder: docs/
           config_file: doxygen.txt
           doxygen_version: 1.13.2
-          
-  CopyExamples:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          sparse-checkout: examples
-      - run: |
-          git checkout main examples
-          mv examples copy/examples/
