@@ -131,6 +131,13 @@ bool command_parse(command_s* command)
             continue;
         }
 
+        if (found_option->set_value != NULL)
+        {
+            fprintf(stderr, "Option `%s` already seen previously.. ignoring option.\n",
+                option_get_name(found_option));
+            continue;
+        }
+
         arguments_init(&found_option->parsed_arguments,
                        command->parsed_arguments.argv_arguments[i],
                        (int)command->parsed_arguments.argv_count - ((int)i + 1),

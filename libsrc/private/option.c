@@ -25,6 +25,8 @@ static int parse_option__multi_string_(option_s* option);
 static void clean_option__string_(option_s* option);
 static void clean_option__multi_string_(option_s* option);
 
+static void notation_generic_cleaner_(void* notation);
+
 // END LOCAL FUNCTION DEFINITIONS //
 
 bool option_init(option_s* option, bool is_required, option_type_e option_type, void* default_value)
@@ -119,13 +121,12 @@ void option_clean(option_s* option)
 
     arguments_clean(&option->parsed_arguments);
     free(option->set_value);
-    shared_value_clean_ex(&option->shared_notation,
-            (void(*)(void*))notation_clean);
+    shared_value_clean_ex(&option->shared_notation, notation_generic_cleaner_);
 }
 
 int option_parse(option_s* option)
 {
-    if (option == NULL)
+    if (option == NULL || option->set_value != NULL)
         return 0;
 
     int arguments_consumed = 0;
@@ -428,6 +429,7 @@ int parse_option__string_(option_s* option)
 
     int consumed_count = 0;
     const char* text_value = parse_read_first_val_(option, false, NULL, &consumed_count);
+
     if (consumed_count == 0 || text_value == NULL)
         return -1;
 
@@ -495,5 +497,8 @@ void clean_option__multi_string_(option_s* option)
 
     free(option->default_value.multi_string_value);
 }
+
+
+void notation_generic_cleaner_(void* notation) { notation_clean(notation); }
 
 // END LOCAL FUNCTION IMPLEMENTATIONS //
