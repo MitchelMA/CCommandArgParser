@@ -60,6 +60,18 @@ void shared_value_clean(shared_value_s* value)
     value->value_mem_size_ = 0;
 }
 
+
+void shared_value_clean_ex(shared_value_s* value, void (*clean_func)(void*))
+{
+    if (!IS_SHARED_VALUE_SAFE(value))
+        return;
+
+    if (*value->counter_ < 2 && clean_func != NULL)
+        clean_func(value->value_);
+
+    shared_value_clean(value);
+}
+
 int64_t shared_value_use_count(const shared_value_s* value)
 {
     if (!IS_SHARED_VALUE_SAFE(value))

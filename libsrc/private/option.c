@@ -100,26 +100,27 @@ void option_clean(option_s* option)
     if (option == NULL)
         return;
 
-    switch (option->type)
+    // Using the shared-value as a memory-guard here
+    if (shared_value_use_count(&option->shared_notation) < 2)
     {
-    case OPTION_TYPE_STRING:
-        clean_option__string_(option);
-    break;
-    case OPTION_TYPE_MULTI_STRING:
-        clean_option__multi_string_(option);
-    break;
+        switch (option->type)
+        {
+        case OPTION_TYPE_STRING:
+            clean_option__string_(option);
+        break;
+        case OPTION_TYPE_MULTI_STRING:
+            clean_option__multi_string_(option);
+        break;
 
-    default:
-    break;
+        default:
+        break;
+        }
     }
 
     arguments_clean(&option->parsed_arguments);
     free(option->set_value);
-
-    if (shared_value_use_count(&option->shared_notation) < 2)
-        notation_clean(shared_value_read(&option->shared_notation));
-
-    shared_value_clean(&option->shared_notation);
+    shared_value_clean_ex(&option->shared_notation,
+            (void(*)(void*))notation_clean);
 }
 
 int option_parse(option_s* option)

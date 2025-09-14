@@ -15,6 +15,7 @@ typedef struct shared_value_
 bool shared_value_init(shared_value_s* value, size_t mem_size);
 bool shared_value_init_unused(shared_value_s* value, size_t mem_size);
 void shared_value_clean(shared_value_s* value);
+void shared_value_clean_ex(shared_value_s* value, void (*clean_func)(void*));
 int64_t shared_value_use_count(const shared_value_s* value);
 
 bool shared_value_copy_into(shared_value_s* restrict dest, shared_value_s* restrict src);
